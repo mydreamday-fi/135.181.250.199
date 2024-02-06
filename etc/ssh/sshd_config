@@ -1,124 +1,55 @@
-#	$OpenBSD: sshd_config,v 1.103 2018/04/09 20:41:22 tj Exp $
-
-# This is the sshd server system-wide configuration file.  See
-# sshd_config(5) for more information.
-
-# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
-
-# The strategy used for options in the default sshd_config shipped with
-# OpenSSH is to specify options with their default value where
-# possible, but leave them commented.  Uncommented options override the
-# default value.
-
-Include /etc/ssh/sshd_config.d/*.conf
-
-#Port 22
-#AddressFamily any
-#ListenAddress 0.0.0.0
-#ListenAddress ::
-
-#HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_ecdsa_key
-#HostKey /etc/ssh/ssh_host_ed25519_key
-
-# Ciphers and keying
-#RekeyLimit default none
-
-# Logging
-#SyslogFacility AUTH
-#LogLevel INFO
-
-# Authentication:
-
-#LoginGraceTime 2m
-PermitRootLogin yes
-#StrictModes yes
-#MaxAuthTries 6
-#MaxSessions 10
-
-#PubkeyAuthentication yes
-
-# Expect .ssh/authorized_keys2 to be disregarded by default in future.
-#AuthorizedKeysFile	.ssh/authorized_keys .ssh/authorized_keys2
-
-#AuthorizedPrincipalsFile none
-
-#AuthorizedKeysCommand none
-#AuthorizedKeysCommandUser nobody
-
-# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
-#HostbasedAuthentication no
-# Change to yes if you don't trust ~/.ssh/known_hosts for
-# HostbasedAuthentication
-#IgnoreUserKnownHosts no
-# Don't read the user's ~/.rhosts and ~/.shosts files
-#IgnoreRhosts yes
-
-# To disable tunneled clear text passwords, change to no here!
-#PasswordAuthentication yes
-#PermitEmptyPasswords no
-
-# Change to yes to enable challenge-response passwords (beware issues with
-# some PAM modules and threads)
+# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# «Specifies whether challenge-response authentication is allowed
+# «(e.g. via PAM or though authentication styles supported in `login.conf`).
+# «The default is ''yes''.»
+# https://linux.die.net/man/5/sshd_config
 ChallengeResponseAuthentication no
-
-# Kerberos options
-#KerberosAuthentication no
-#KerberosOrLocalPasswd yes
-#KerberosTicketCleanup yes
-#KerberosGetAFSToken no
-
-# GSSAPI options
-#GSSAPIAuthentication no
-#GSSAPICleanupCredentials yes
-#GSSAPIStrictAcceptorCheck yes
-#GSSAPIKeyExchange no
-
-# Set this to 'yes' to enable PAM authentication, account processing,
-# and session processing. If this is enabled, PAM authentication will
-# be allowed through the ChallengeResponseAuthentication and
-# PasswordAuthentication.  Depending on your PAM configuration,
-# PAM authentication via ChallengeResponseAuthentication may bypass
-# the setting of "PermitRootLogin without-password".
-# If you just want the PAM account and session checks to run without
-# PAM authentication, then enable this but set PasswordAuthentication
-# and ChallengeResponseAuthentication to 'no'.
-UsePAM yes
-
-#AllowAgentForwarding yes
-#AllowTcpForwarding yes
-#GatewayPorts no
-X11Forwarding yes
-#X11DisplayOffset 10
-#X11UseLocalhost yes
-#PermitTTY yes
+# http://fredericiana.com/2009/10/21/keeping-ssh-from-disconnecting-automatically
+# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# «Sets a timeout interval in seconds after which if no data has been received from the client,
+# `sshd` will send a message through the encrypted channel to request a response from the client.
+# The default is 0, indicating that these messages will not be sent to the client.
+# This option applies to protocol version 2 only.»
+# https://linux.die.net/man/5/sshd_config
+ClientAliveInterval 20
+# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# 1) «Sets the number of client alive messages (see below) which may be sent
+# without `sshd` receiving any messages back from the client.
+# If this threshold is reached while client alive messages are being sent,
+# `sshd` will disconnect the client, terminating the session.
+# It is important to note that the use of client alive messages is very different from `TCPKeepAlive` (below).
+# The client alive messages are sent through the encrypted channel and therefore will not be spoofable.
+# The TCP keepalive option enabled by `TCPKeepAlive` is spoofable.
+# The client alive mechanism is valuable when the client or server depend on knowing when a connection has become inactive.
+# The default value is 3.
+# If `ClientAliveInterval` (see below) is set to 15, and `ClientAliveCountMax` is left at the default,
+# unresponsive SSH clients will be disconnected after approximately 45 seconds.
+# This option applies to protocol version 2 only.»
+# https://linux.die.net/man/5/sshd_config
+# 2) 60 * 24 * 2 * 3 (2 days, 3 times in a minute)
+ClientAliveCountMax 8640
+# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# «Specifies a file containing a private host key used by SSH.
+# The default is `/etc/ssh/ssh_host_key` for protocol version 1,
+# and `/etc/ssh/ssh_host_rsa_key` and `/etc/ssh/ssh_host_dsa_key` for protocol version 2.
+# Note that `sshd` will refuse to use a file if it is group/world-accessible.
+# It is possible to have multiple host key files.
+# ''rsa1'' keys are used for version 1 and ''dsa'' or ''rsa'' are used for version 2 of the SSH protocol.»
+# https://linux.die.net/man/5/sshd_config
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_rsa_key
 PrintMotd no
-#PrintLastLog yes
-#TCPKeepAlive yes
-#PermitUserEnvironment no
-#Compression delayed
-#ClientAliveInterval 0
-#ClientAliveCountMax 3
-#UseDNS no
-#PidFile /var/run/sshd.pid
-#MaxStartups 10:30:100
-#PermitTunnel no
-#ChrootDirectory none
-#VersionAddendum none
-
-# no default banner path
-#Banner none
-
-# Allow client to pass locale environment variables
-AcceptEnv LANG LC_*
-
-# override default of no subsystems
-Subsystem sftp	/usr/lib/openssh/sftp-server
-
-# Example of overriding settings on a per-user basis
-#Match User anoncvs
-#	X11Forwarding no
-#	AllowTcpForwarding no
-#	PermitTTY no
-#	ForceCommand cvs server
-PasswordAuthentication no
+Subsystem sftp /usr/lib/openssh/sftp-server
+# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# 1) «Specifies whether the system should send TCP keepalive messages to the other side.
+# If they are sent, death of the connection or crash of one of the machines will be properly noticed
+# However, this means that connections will die if the route is down temporarily, and some people find it annoying.
+# On the other hand, if TCP keepalives are not sent, sessions may hang indefinitely on the server,
+# leaving ''ghost'' users and consuming server resources.
+# The default is ''yes'' (to send TCP keepalive messages),
+# and the server will notice if the network goes down or the client host crashes.
+# This avoids infinitely hanging sessions.»
+# https://linux.die.net/man/5/sshd_config
+# 2) «If you're using `ClientAliveInterval`, you can disable `TCPKeepAlive`»: https://unix.stackexchange.com/a/329600
+TCPKeepAlive no
