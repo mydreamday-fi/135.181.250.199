@@ -1,18 +1,18 @@
-# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# 2023-09-15 Dmitrii Fediuk https://github.com/dmitrii-fediuk
 # «Specifies whether challenge-response authentication is allowed
 # «(e.g. via PAM or though authentication styles supported in `login.conf`).
 # «The default is ''yes''.»
 # https://linux.die.net/man/5/sshd_config
 ChallengeResponseAuthentication no
 # http://fredericiana.com/2009/10/21/keeping-ssh-from-disconnecting-automatically
-# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# 2023-09-15 Dmitrii Fediuk https://github.com/dmitrii-fediuk
 # «Sets a timeout interval in seconds after which if no data has been received from the client,
 # `sshd` will send a message through the encrypted channel to request a response from the client.
 # The default is 0, indicating that these messages will not be sent to the client.
 # This option applies to protocol version 2 only.»
 # https://linux.die.net/man/5/sshd_config
 ClientAliveInterval 20
-# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# 2023-09-15 Dmitrii Fediuk https://github.com/dmitrii-fediuk
 # 1) «Sets the number of client alive messages (see below) which may be sent
 # without `sshd` receiving any messages back from the client.
 # If this threshold is reached while client alive messages are being sent,
@@ -28,7 +28,7 @@ ClientAliveInterval 20
 # https://linux.die.net/man/5/sshd_config
 # 2) 60 * 24 * 2 * 3 (2 days, 3 times in a minute)
 ClientAliveCountMax 8640
-# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# 2023-09-15 Dmitrii Fediuk https://github.com/dmitrii-fediuk
 # «Specifies a file containing a private host key used by SSH.
 # The default is `/etc/ssh/ssh_host_key` for protocol version 1,
 # and `/etc/ssh/ssh_host_rsa_key` and `/etc/ssh/ssh_host_dsa_key` for protocol version 2.
@@ -41,7 +41,7 @@ HostKey /etc/ssh/ssh_host_ecdsa_key
 HostKey /etc/ssh/ssh_host_rsa_key
 PrintMotd no
 Subsystem sftp /usr/lib/openssh/sftp-server
-# 2023-09-15 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# 2023-09-15 Dmitrii Fediuk https://github.com/dmitrii-fediuk
 # 1) «Specifies whether the system should send TCP keepalive messages to the other side.
 # If they are sent, death of the connection or crash of one of the machines will be properly noticed
 # However, this means that connections will die if the route is down temporarily, and some people find it annoying.
